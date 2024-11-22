@@ -77,7 +77,7 @@ const Create = () => {
   });
 
   const chiaDeu = () => {
-    console.log("chia deu");
+    console.log("chia-deu");
     // toast(
     //   (t) => (
     //     <div className="text-center">
