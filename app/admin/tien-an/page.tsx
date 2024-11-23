@@ -79,10 +79,12 @@ const Page = () => {
   };
 
   return (
-    <div className="container mx-auto mt-5">
+    <div className="container mx-auto mt-5 px-2">
       <Toaster position="top-right" />
-      <h1 className="text-2xl font-bold mb-3">
-        Danh sách giao dịch (
+      <h1 className="text-xl lg:text-2xl font-bold mb-3">
+        Danh sách giao dịch
+        <br className="inline lg:hidden" />
+         (
         <Link
           className="text-blue-700 font-semibold underline"
           href={"/admin/tien-an/create"}
