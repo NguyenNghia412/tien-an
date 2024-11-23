@@ -154,7 +154,10 @@ const Create = () => {
         <h3 className="text-base lg:text-xl font-bold">Thông tin chung</h3>
         <div className="mt-2 grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
           <div className="flex flex-col">
-            <label htmlFor="transDate" className="mb-2 font-semibold text-sm lg:text-base">
+            <label
+              htmlFor="transDate"
+              className="mb-2 font-semibold text-sm lg:text-base"
+            >
               Ngày giao dịch
             </label>
             <input
@@ -166,7 +169,10 @@ const Create = () => {
             <p className="text-red-600">{errors.transDate?.message}</p>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="totalAmount" className="mb-2 font-semibold text-sm lg:text-base">
+            <label
+              htmlFor="totalAmount"
+              className="mb-2 font-semibold text-sm lg:text-base"
+            >
               Tổng tiền
             </label>
             <div className="flex flex-row space-x-2">
@@ -174,14 +180,17 @@ const Create = () => {
                 id="totalAmount"
                 type="number"
                 {...register("totalAmount")}
-                className="border p-2 rounded-md flex-1"
+                className="border p-2 rounded-md w-full"
               />
               <MyButton label="Chia đều" onClick={chiaDeu} />
             </div>
             <p className="text-red-600">{errors.totalAmount?.message}</p>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="transType" className="mb-2 font-semibold text-sm lg:text-base">
+            <label
+              htmlFor="transType"
+              className="mb-2 font-semibold text-sm lg:text-base"
+            >
               Loại giao dịch
             </label>
             <select
@@ -198,7 +207,10 @@ const Create = () => {
             <p className="text-red-600">{errors.transType?.message}</p>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="paymentType" className="mb-2 font-semibold text-sm lg:text-base">
+            <label
+              htmlFor="paymentType"
+              className="mb-2 font-semibold text-sm lg:text-base"
+            >
               Loại thanh toán
             </label>
             <select
@@ -220,7 +232,9 @@ const Create = () => {
         <div className="mt-2 grid grid-cols-2 gap-2 mx-auto">
           {userList.map((user, index) => (
             <div key={user.fullname}>
-              <div className="text-sm lg:text-base font-semibold mb-2">{user.fullname}</div>
+              <div className="text-sm lg:text-base font-semibold mb-2">
+                {user.fullname}
+              </div>
               <input
                 id="amount"
                 type="number"
