@@ -10,6 +10,7 @@ import { columns } from "./columns";
 
 const Page = () => {
   const [listTienAn, setListTienAn] = useState<[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchData();
@@ -31,7 +32,7 @@ const Page = () => {
             />
             <MyButton
               onClick={() => toast.dismiss(t.id)}
-              className="bg-white hover:bg-slate-100 text-black px-3 py-1 text-sm"
+              className="bg-white hover:bg-slate-100 !text-black px-3 py-1 text-sm"
               label="Hủy"
             />
           </div>
@@ -44,6 +45,7 @@ const Page = () => {
   };
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(`/api/admin/tien-an`);
       if (!response.ok) {
@@ -55,6 +57,7 @@ const Page = () => {
     } catch (error: any) {
       toast.error(error.message);
     }
+    setIsLoading(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -83,8 +86,7 @@ const Page = () => {
       <Toaster position="top-right" />
       <h1 className="text-xl lg:text-2xl font-bold mb-3">
         Danh sách giao dịch
-        <br className="inline lg:hidden" />
-         (
+        <br className="inline lg:hidden" />(
         <Link
           className="text-blue-700 font-semibold underline"
           href={"/admin/tien-an/create"}
@@ -94,7 +96,11 @@ const Page = () => {
         )
       </h1>
       <div className="py-5">
-        <DataTable columnDefs={columns(onDelete)} data={listTienAn} />
+        <DataTable
+          columnDefs={columns(onDelete)}
+          data={listTienAn}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

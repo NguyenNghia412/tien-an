@@ -10,20 +10,24 @@ import {
 import { ITransaction } from "@/constant/tien-an/models";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { use, useEffect } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+
+import Rodal from "rodal";
+
+// include styles
+import "rodal/lib/rodal.css";
 
 import * as yup from "yup";
 
 const userList = [
-  { fullname: "Tuấn" },
-  { fullname: "Chính" },
-  { fullname: "Huy" },
-  { fullname: "Thiện" },
-  { fullname: "Dương" },
-  { fullname: "Nghĩa" },
+  { id: "1", fullname: "Tuấn" },
+  { id: "2", fullname: "Chính" },
+  { id: "3", fullname: "Huy" },
+  { id: "4", fullname: "Thiện" },
+  { id: "5", fullname: "Dương" },
+  { id: "6", fullname: "Nghĩa" },
 ];
 
 const schema = yup.object({
@@ -57,7 +61,8 @@ const Create = () => {
   const {
     register,
     handleSubmit,
-    control,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -68,41 +73,48 @@ const Create = () => {
         day: "2-digit",
       }).format(new Date()),
       totalAmount: 0,
-      details: userList.map((user, index) => ({
+      details: userList.map((user) => ({
         amount: 0,
         fullname: user.fullname,
-        userId: `${index}`,
+        userId: user.id,
       })),
     },
   });
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
   const chiaDeu = () => {
     console.log("chia-deu");
-    // toast(
-    //   (t) => (
-    //     <div className="text-center">
-    //       <span className="font-bold">Chọn người ăn</span>
-    //       <div className="flex flex-row mt-2 gap-2">
-    //         <MyButton
-    //           onClick={() => {
-    //             handleDelete(item.id || "");
-    //             toast.dismiss(t.id);
-    //           }}
-    //           className="bg-red-700 hover:bg-red-500 px-3 py-1 text-sm"
-    //           label="Xóa luôn"
-    //         />
-    //         <MyButton
-    //           onClick={() => toast.dismiss(t.id)}
-    //           className="bg-white hover:bg-slate-100 text-black px-3 py-1 text-sm"
-    //           label="Hủy"
-    //         />
-    //       </div>
-    //     </div>
-    //   ),
-    //   {
-    //     position: "top-center",
-    //   }
-    // );
+    setIsOpenDialog(true);
+  };
+
+  const handleCheckboxChange = (id: string) => {
+    if (selectedUsers.includes(id)) {
+      setSelectedUsers(selectedUsers.filter((userId) => userId !== id));
+    } else {
+      setSelectedUsers([...selectedUsers, id]);
+    }
+  };
+
+  const handleEquallyDivide = () => {
+    const oldDetails = getValues("details");
+    const totalAmount = getValues("totalAmount");
+    const count = selectedUsers.length;
+
+    if (count > 0) {
+      const amount = Math.round(totalAmount / count);
+
+      setValue(
+        "details",
+        oldDetails?.map((x) => {
+          if (selectedUsers.includes(x.userId || "")) {
+            return { ...x, amount };
+          }
+          return { ...x };
+        })
+      );
+      setIsOpenDialog(false);
+    }
   };
 
   const handleSave = (data: FormData) => {
@@ -182,7 +194,7 @@ const Create = () => {
                 {...register("totalAmount")}
                 className="border p-2 rounded-md w-full"
               />
-              <MyButton label="Chia đều" onClick={chiaDeu} />
+              <MyButton label="Chia đều" type="button" onClick={chiaDeu} />
             </div>
             <p className="text-red-600">{errors.totalAmount?.message}</p>
           </div>
@@ -259,6 +271,45 @@ const Create = () => {
           <MyButton label="Lưu" type="submit" />
         </div>
       </form>
+      <Rodal
+        visible={isOpenDialog}
+        onClose={() => setIsOpenDialog(false)}
+        height={300}
+      >
+        <h4 className="text-xl lg:text-2xl font-semibold lg:font-bold">
+          Chia đều tiền ăn
+        </h4>
+        <div className="mt-2">
+          <h6 className="text-base lg:text-lg">Chọn người</h6>
+          {userList &&
+            userList.map((user, index) => (
+              <div key={index}>
+                <label className="text-sm lg:text-base">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={selectedUsers.includes(user.id)}
+                    onChange={() => handleCheckboxChange(user.id)}
+                  />
+                  {user.fullname}
+                </label>
+              </div>
+            ))}
+        </div>
+        <div className="flex flex-row justify-end space-x-2 mt-5">
+          <MyButton
+            label="Hủy"
+            type="button"
+            onClick={() => setIsOpenDialog(false)}
+            className=" border border-blue-700 !text-blue-700 bg-white"
+          />
+          <MyButton
+            label="Xác nhận"
+            type="button"
+            onClick={handleEquallyDivide}
+          />
+        </div>
+      </Rodal>
     </div>
   );
 };

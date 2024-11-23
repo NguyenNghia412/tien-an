@@ -7,6 +7,7 @@ import { ColDef } from "ag-grid-community";
 type IDataTableProps = {
   columnDefs: ColDef[];
   data: [];
+  isLoading: boolean;
 };
 
 const DataTable: React.FC<IDataTableProps> = (props) => {
@@ -15,7 +16,11 @@ const DataTable: React.FC<IDataTableProps> = (props) => {
       className="ag-theme-quartz w-full" // applying the Data Grid theme
       style={{ height: 500 }} // the Data Grid will fill the size of the parent container
     >
-      <AgGridReact columnDefs={props.columnDefs} rowData={props.data} />
+      <AgGridReact
+        columnDefs={props.columnDefs}
+        rowData={props.data}
+        loading={props.isLoading || false}
+      />
     </div>
   );
 };
